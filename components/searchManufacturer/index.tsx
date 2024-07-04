@@ -1,14 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { SearchManufacturerProps } from "@/types";
 import { Combobox, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { manufacturers } from "@/constants";
+
 const SearchManufacturer = ({
   manufacturer,
   setManufacturer,
 }: SearchManufacturerProps) => {
   const [query, setQuery] = useState("");
 
+  const filtereManufacturers =
+    query === ""
+      ? manufacturers
+      : manufacturers.filter((item) => item.toLowerCase().replace(/\s+/g, ""));
   return (
     <div className="search-manufacturer">
       <Combobox>
@@ -28,6 +34,16 @@ const SearchManufacturer = ({
             displayValue={(manufacturer: string) => manufacturer}
             onChange={(e) => setQuery(e.target.value)}
           />
+
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            afterLeave={() => setQuery("")}
+          >
+            <Combobox.Option></Combobox.Option>
+          </Transition>
         </div>
       </Combobox>
     </div>
