@@ -4,6 +4,7 @@ import { SearchManufacturerProps } from "@/types";
 import { Combobox, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { manufacturers } from "@/constants";
+import { CheckIcon } from "lucide-react";
 
 const SearchManufacturer = ({
   manufacturer,
@@ -14,7 +15,12 @@ const SearchManufacturer = ({
   const filtereManufacturers =
     query === ""
       ? manufacturers
-      : manufacturers.filter((item) => item.toLowerCase().replace(/\s+/g, ""));
+      : manufacturers.filter((item) =>
+          item
+            .toLowerCase()
+            .replace(/\s+/g, "")
+            .includes(query.toLowerCase().replace(/\s+/g, ""))
+        );
   return (
     <div className="search-manufacturer">
       <Combobox>
@@ -42,7 +48,37 @@ const SearchManufacturer = ({
             leaveTo="opacity-0"
             afterLeave={() => setQuery("")}
           >
-            <Combobox.Option></Combobox.Option>
+            <Combobox.Options>
+              {filtereManufacturers.map((item) => (
+                <Combobox.Option
+                  value={item}
+                  key={item}
+                  className={({ active }) => `
+                    relative search-manufacturer__option
+                    ${active ? "bg-primary -blue text-white" : "text-gray-900"}
+                    `}
+                >
+                  {({ selected, active }) => (
+                    <>
+                      <span
+                        className={`block truncate ${
+                          selected ? "font-medium" : "font-normal"
+                        } `}
+                      >
+                        {item}
+                      </span>
+                      {selected ? (
+                        <span
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                            active ? "text-white" : "to-teal-600"
+                          }`}
+                        ></span>
+                      ) : null}
+                    </>
+                  )}
+                </Combobox.Option>
+              ))}
+            </Combobox.Options>
           </Transition>
         </div>
       </Combobox>
