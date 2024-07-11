@@ -4,13 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Listbox, Transition } from "@headlessui/react";
 import { CustopmFilterProps } from "@/types";
-import { updateSearchParam } from "@/utils";
+import { updateSearchParams } from "@/utils";
 
 const CustomFilter = ({ title, options }: CustopmFilterProps) => {
   const [selected, setSelected] = useState(options[0]);
   const router = useRouter();
   const handleUpdateParams = (e: { title: string; value: string }) => {
-    const newPathName = updateSearchParam(title, e.value.toLowerCase());
+    const newPathName = updateSearchParams(title, e.value.toLowerCase());
 
     router.push(newPathName);
   };
